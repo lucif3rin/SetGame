@@ -36,7 +36,7 @@ class Colors:
     class Bg:
         BLACK = '\033[40m'
         RED = '\033[41m'
-        GREEN = '\034[42m'
+        GREEN = '\033[42m'
         ORANGE = '\033[43m'
         BLUE = '\033[44m'
         PURPLE = '\033[45m'
@@ -71,9 +71,9 @@ class Log:
         :param msg: The message to write to the log.
         :return:    True if successful, false otherwise.
         """
-        log_msg = msg + Colors.RESET
+        log_msg = msg + Colors.RESET + '\n'
         if self.output_to_console:
-            print(log_msg)
+            print(log_msg, end='')
         self.log_file.write(log_msg)
 
     def write_event(self, msg: str):
@@ -96,6 +96,14 @@ class Log:
         """
         error_msg = f"{Colors.Bg.RED}ERROR:{Colors.RESET} {Colors.Fg.RED}{msg}"
         self.write_to_log(error_msg)
+
+    def write_exception(self, msg: str):
+        """
+        Writes an exception with formatting.
+        Same as write_error but without the preceding ERROR:, used for logging python exceptions.
+        """
+        exception_msg = f"{Colors.RESET}{Colors.Fg.RED}{msg}"
+        self.write_to_log(exception_msg)
 
     def write_fatal(self, msg):
         """
